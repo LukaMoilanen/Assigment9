@@ -15,7 +15,7 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    let [exist] = await getDataById(req.body.id)
+    let exist = await getDataById(req.body.id)
     if( exist ) {
         res.status(409).json( {"error": "record already exists"});
     } else {
@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    let [exist] = await getDataById(req.params.id);
+    let exist = await getDataById(req.params.id);
 
     if (!exist) {
         return res.status(404).json({ error: "record not found" });
@@ -44,7 +44,7 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    let [exist] = await getDataById(req.params.id);
+    let exist = await getDataById(req.params.id);
 
     if (!exist) {
         return res.status(404).json({ error: "record not found" });
