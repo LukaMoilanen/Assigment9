@@ -1,0 +1,162 @@
+openapi: 3.1.0
+info:
+  title: Karelia API Programming - OpenAPI 3.1.0 Demonstration
+  description: |-
+    This is a sample OpenAPI OAD.
+    
+    Some useful links:
+    - [Learn OpenAPI](https://learn.openapis.org)
+    - [OpenAPI Specification](https://learn.openapis.org/)
+  version: 0.1.1
+
+servers:
+  - url: https://lukau2411549.westeurope.cloudapp.azure.com
+  - url: http://localhost:3000
+
+security:
+  - bearerAuth: []
+
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: Login and retrieve token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Login failed
+
+  /data:
+    get:
+      tags:
+        - Data Operations
+      summary: Get all data
+      responses:
+        '200':
+          description: A list of all records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Data'
+    post:
+      tags:
+        - Data Operations
+      summary: Add a new record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Data'
+      responses:
+        '200':
+          description: Record added successfully
+        '409':
+          description: Conflict - ID already exists
+
+  /data/user_records:
+    get:
+      tags:
+        - Assignment 7
+      summary: Fetch data via stored procedure
+      description: This route calls the user_records() procedure in the database.
+      responses:
+        '200':
+          description: Data returned by the procedure
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Data'
+
+  /data/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Data Operations
+      summary: Get a specific record by ID
+      responses:
+        '200':
+          description: Successful operation
+    put:
+      tags:
+        - Data Operations
+      summary: Update a record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Firstname:
+                  type: string
+                Surname:
+                  type: string
+                userid:
+                  type: string
+      responses:
+        '200':
+          description: Record updated
+        '404':
+          description: Record not found
+    delete:
+      tags:
+        - Data Operations
+      summary: Delete a record
+      responses:
+        '200':
+          description: Record deleted
+        '404':
+          description: Record not found
+
+components:
+  schemas:
+    Data:
+      type: object
+      required:
+        - id
+        - Firstname
+        - Surname
+        - userid
+      properties:
+        id:
+          type: integer
+          example: 5
+        Firstname:
+          type: string
+          example: Donald
+        Surname:
+          type: string
+          example: Duck
+        userid:
+          type: string
+          example: jk
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
